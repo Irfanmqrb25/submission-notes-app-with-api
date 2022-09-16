@@ -11,7 +11,15 @@ class ArchivePage extends React.Component {
 
         this.state = {
             notes: getArchivedNotes(),
+            search: "",
         };
+        this.onSearchHandler = this.onSearchHandler.bind(this);
+    }
+
+    onSearchHandler(search) {
+        this.setState(() => {
+            return { search }
+        });
     }
 
     render() {
@@ -25,7 +33,7 @@ class ArchivePage extends React.Component {
         return (
             <section>
                 <h2>Catatan Arsip</h2>
-                <SearchBar />
+                <SearchBar search={this.state.search} onSearch={this.onSearchHandler} />
                 {noteIsArchived.length > 0 ? <NoteItemList notes={noteIsArchived} />
                     : <NoteListEmpty />}
             </section>

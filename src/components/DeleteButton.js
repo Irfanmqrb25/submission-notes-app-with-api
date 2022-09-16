@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 import { MdDeleteOutline } from 'react-icons/md';
+import PropTypes from "prop-types";
 
 function DeleteButton({ id, onDelete }) {
     const navigate = useNavigate();
@@ -9,6 +10,11 @@ function DeleteButton({ id, onDelete }) {
                 <MdDeleteOutline />
             </button>
     )
+}
+
+DeleteButton.propTypes = {
+    id: PropTypes.string.isRequired,
+    onDelete: PropTypes.func.isRequired,
 }
 
 export default DeleteButton;

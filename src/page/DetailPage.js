@@ -1,6 +1,6 @@
 import React from 'react';
 import NoteDetail from '../components/NoteDetail';
-import { getNote, deleteNote, archiveNote } from '../utils/local-data';
+import { getNote, deleteNote, archiveNote, unarchiveNote } from '../utils/local-data';
 import { useParams } from 'react-router-dom';
 import PropTypes from "prop-types";
 
@@ -15,7 +15,11 @@ function DetailPageWrapper() {
         archiveNote(id);
     }
 
-    return <DetailPage id={id} onDelete={onDeleteHandler} onArchive={onArchiveHandler}/>;
+    function onUnArchiveHandler(id) {
+        unarchiveNote(id);
+    }
+
+    return <DetailPage id={id} onDelete={onDeleteHandler} onArchive={onArchiveHandler} onUnArchive={onUnArchiveHandler} />;
 }
 
 class DetailPage extends React.Component {
@@ -27,12 +31,8 @@ class DetailPage extends React.Component {
     }
 
     render() {
-        if (this.state.note === null) {
-            return <p>Tidak ada catatan</p>
-        }
-
         return (
-            <NoteDetail {...this.state.note} onDelete={deleteNote} onArchive={archiveNote}/>
+            <NoteDetail {...this.state.note} onDelete={deleteNote} onArchive={archiveNote} onUnArchive={unarchiveNote} />
         )
     }
 }

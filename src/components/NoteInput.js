@@ -1,6 +1,6 @@
 import React from "react";
 import { HiCheck } from 'react-icons/hi'
-
+import PropTypes from "prop-types";
 
 class NoteInput extends React.Component {
     constructor(props) {
@@ -20,7 +20,7 @@ class NoteInput extends React.Component {
     }
 
     onBodyChangeEventHandler(event) {
-        this.setState({ body: event.target.innerHTML });
+        this.setState({ body: event.target.innerText });
     }
 
     onSubmitEventHandler(event) {
@@ -56,6 +56,10 @@ class NoteInput extends React.Component {
             </section >
         )
     }
+}
+
+NoteInput.propTypes = {
+    addNote: PropTypes.func.isRequired,
 }
 
 export default NoteInput
