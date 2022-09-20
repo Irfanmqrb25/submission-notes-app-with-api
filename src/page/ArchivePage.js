@@ -1,44 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { getArchivedNotes } from "../utils/network-data";
 import NoteItemList from "../components/NoteItemList";
 import SearchBar from "../components/SearchBar";
 import NoteListEmpty from "../components/NoteListEmpty";
-import { getArchivedNotes } from "../utils/local-data";
 
+function ArchivePage() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [notes, setNotes] = useState([]);
+    const [keyword, setKeyword] = useState(() => {
+        return searchParams.get('keyword') || ''
+    });
 
-class ArchivePage extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            notes: getArchivedNotes(),
-            search: "",
-        };
-        this.onSearchHandler = this.onSearchHandler.bind(this);
-    }
-
-    onSearchHandler(search) {
-        this.setState(() => {
-            return { search }
+    useEffect(() => {
+        getArchivedNotes().then(({ data }) => {
+            setNotes(data);
         });
+    }, []);
+
+    function onKeywordChangeHandler(keyword) {
+        setKeyword(keyword);
+        setSearchParams({ keyword });
     }
 
-    render() {
-        const notes = this.state.notes.filter((note) =>
-            note.title.toLowerCase().includes(this.state.search)
+    const filteredNotes = notes.filter((note) => {
+        return note.title.toLowerCase().includes(
+            keyword.toLowerCase()
         );
-        const noteIsArchived = notes.filter((note) => {
-            return note.archived === true
-        });
+    })
 
-        return (
-            <section>
-                <h2>Catatan Arsip</h2>
-                <SearchBar search={this.state.search} onSearch={this.onSearchHandler} />
-                {noteIsArchived.length > 0 ? <NoteItemList notes={noteIsArchived} />
-                    : <NoteListEmpty />}
-            </section>
-        );
-    }
+    return (
+        <section>
+            <h2>Catatan Arsip</h2>
+            <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
+            {filteredNotes.length > 0 ? <NoteItemList notes={filteredNotes} />
+                : <NoteListEmpty />}
+        </section>
+    )
 }
+
 
 export default ArchivePage;

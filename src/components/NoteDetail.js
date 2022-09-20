@@ -15,8 +15,6 @@ function NoteDetail({ id, title, createdAt, body, onDelete, onArchive, onUnArchi
             <div className='detail-page__action'>
                 {archived ? <UnArchiveButton id={id} onUnArchive={onUnArchive} /> 
                 : <ArchiveButton id={id} onArchive={onArchive} /> }
-                
-                
                 <DeleteButton id={id} onDelete={onDelete} />
             </div>
         </section>
