@@ -9,7 +9,6 @@ function NoteItemList({ notes }) {
                 <NoteItem 
                 key={note.id} 
                 id={note.id} 
-                isArchive={note.archived}
                 {...note} />))
             }
         </section>
