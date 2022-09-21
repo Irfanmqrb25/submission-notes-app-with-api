@@ -1,17 +1,26 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { LocaleConsumer } from "../context/LocaleContext";
 
 
-function SearchBar({keyword, keywordChange}) {
+function SearchBar({ keyword, keywordChange }) {
     return (
-        <section className="search-bar">
-            <input
-            type="text"
-            placeholder="Cari berdasarkan judul ..."
-            value={keyword}
-            onChange={(event) => keywordChange(event.target.value)}
-            />
-        </section>
+        <LocaleConsumer>
+            {
+                ({ locale }) => {
+                    return (
+                        <section className="search-bar">
+                            <input
+                                type="text"
+                                placeholder={locale === "id" ? "Cari berdasarkan judul ..." : "Search by title ..."}
+                                value={keyword}
+                                onChange={(event) => keywordChange(event.target.value)}
+                            />
+                        </section>
+                    )
+                }
+            }
+        </LocaleConsumer>
     )
 }
 
@@ -21,3 +30,4 @@ SearchBar.propType = {
 }
 
 export default SearchBar;
+

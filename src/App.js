@@ -8,6 +8,7 @@ import RegisterPage from './page/RegisterPage';
 import LoginPage from './page/LoginPage';
 import Header from './components/Header';
 import ThemeContext from './context/ThemeContext';
+import LocaleContext from './context/LocaleContext';
 import { getUserLogged, putAccessToken } from './utils/network-data';
 
 function App() {
@@ -34,6 +35,22 @@ function App() {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
+  const [locale, setLocale] = useState(localStorage.getItem("locale") || "id");
+  const toggleLocale = () => {
+    setLocale((prevLocale) => {
+      const newLocale = prevLocale === "id" ? "en" : "id";
+      localStorage.setItem("locale", newLocale);
+      return newLocale
+    });
+  };
+
+  const localeContextValue = React.useMemo(() => {
+    return {
+      locale,
+      toggleLocale,
+    };
+  }, [locale]);
+
   async function onLoginSuccess({ accessToken }) {
     putAccessToken(accessToken);
     const { data } = await getUserLogged();
@@ -59,32 +76,36 @@ function App() {
   if (user === null) {
     return (
       <ThemeContext.Provider value={themeContextValue}>
-        <div className="app-container" data-theme={theme}>
-          <Header name={''} logout={onLogout} />
-          <main>
-            <Routes>
-              <Route path="/*" element={<LoginPage loginSuccess={onLoginSuccess} />} />
-              <Route path="/register" element={<RegisterPage />} />
-            </Routes>
-          </main>
-        </div>
+        <LocaleContext.Provider value={localeContextValue}>
+          <div className="app-container" data-theme={theme}>
+            <Header name={''} logout={onLogout} />
+            <main>
+              <Routes>
+                <Route path="/*" element={<LoginPage loginSuccess={onLoginSuccess} />} />
+                <Route path="/register" element={<RegisterPage />} />
+              </Routes>
+            </main>
+          </div>
+        </LocaleContext.Provider>
       </ThemeContext.Provider>
     )
   }
 
   return (
     <ThemeContext.Provider value={themeContextValue}>
-      <div className="app-container" data-theme={theme}>
-        <Header name={user.name} logout={onLogout} />
-        <main>
-          <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/notes/new' element={<AddNotePage />} />
-            <Route path='/archives' element={<ArchivePage />} />
-            <Route path="/notes/:id" element={<DetailPage />} />
-          </Routes>
-        </main>
-      </div>
+      <LocaleContext.Provider value={localeContextValue}>
+        <div className="app-container" data-theme={theme}>
+          <Header name={user.name} logout={onLogout} />
+          <main>
+            <Routes>
+              <Route path='/' element={<HomePage />} />
+              <Route path='/notes/new' element={<AddNotePage />} />
+              <Route path='/archives' element={<ArchivePage />} />
+              <Route path="/notes/:id" element={<DetailPage />} />
+            </Routes>
+          </main>
+        </div>
+      </LocaleContext.Provider>
     </ThemeContext.Provider>
   );
 }

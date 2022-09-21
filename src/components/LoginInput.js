@@ -1,11 +1,11 @@
-import useInput from "../customhooks/useInput";
+import useInput from "../hooks/useInput";
 import PropTypes from 'prop-types';
 
 function LoginInput({ login }) {
     const [email, onEmailChange] = useInput('');
     const [password, onPasswordChange] = useInput('');
-    const onSubmitEventHandler = (event) => {
-        event.preventDefault();
+    const onSubmitEventHandler = e => {
+        e.preventDefault();
         login({ email, password });
     }
 
@@ -24,4 +24,4 @@ LoginInput.propTypes = {
     login: PropTypes.func.isRequired
 }
 
-export default LoginInput
+export default LoginInput;
